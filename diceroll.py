@@ -10,10 +10,10 @@ parser = optparse.OptionParser(usage='Roll Some Dice!')
 parser.add_option("-s", "--sides", dest="sides", help="Number of sides on the dice rolled - 6, 10, 20?", type=int, default=10)
 parser.add_option("-n","--num",dest="num", help="Number of dice to roll.", type=int, default=1)
 parser.add_option("-a","--again",dest="again", help="Reroll any dice above this number", type=int, default=10)
-parser.add_option("-+","--above",dest="above", help="Count all dice above result", type=int,default=8)
+parser.add_option("-+","--above",dest="above", help="Count all dice rolls equal to or above this number", type=int,default=8)
 
 (options, args) = parser.parse_args()
-print (options, args)
+print ('running with ' + str(options))
 
 rollsleft=options.num
 dicerolls=[]
@@ -21,11 +21,18 @@ dicerolls=[]
 while rollsleft>0:
 	roll=random.randint(1, options.sides)
 	if roll >= options.again:
-		print (roll)
+		#print (roll)
 		dicerolls.append(roll)
 	else:
-		print (roll)
+		#print (roll)
 		dicerolls.append(roll)
 		rollsleft-=1
-print (dicerolls)
+print ('Rolled ==> ' + str(dicerolls))
+print ('Total Dice Rolled with \'agains\' ==>' + str(len(dicerolls)))
 
+rollsuccess=[]
+for roll in dicerolls:
+	if roll >= options.above:
+		rollsuccess.append(roll)
+print ('Success Rolls => ' + str(rollsuccess))
+print ('Success Count ==> ' + str(len(rollsuccess)))
