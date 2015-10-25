@@ -21,10 +21,8 @@ dicerolls=[]
 while rollsleft>0:
 	roll=random.randint(1, options.sides)
 	if roll >= options.again:
-		#print (roll)
 		dicerolls.append(roll)
 	else:
-		#print (roll)
 		dicerolls.append(roll)
 		rollsleft-=1
 print ('Rolled ==> ' + str(dicerolls))
