@@ -17,7 +17,6 @@ print ('running with ' + str(options))
 
 rollsleft=options.num
 dicerolls=[]
-#for x in range(0, rollsleft):
 while rollsleft>0:
 	roll=random.randint(1, options.sides)
 	if roll >= options.again:
