@@ -62,18 +62,18 @@ class DiceHandler(BaseHTTPRequestHandler):
 		s.send_response(200)
 		s.send_header("Content-type", "text/plain")
 		s.end_headers()
-		s.wfile.write()
+		s.wfile.write(bytes("test content", "utf-8"))
 		
 def run_webservice(port):
-	server_class = BaseHTTPServer.HTTPServer
-	httpd = server_class((HOST_NAME, PORT_NUMBER), DiceHandler)
-	print (time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER))
+	#server_class = BaseHTTPServer.HTTPServer
+	httpd = HTTPServer(("0.0.0.0", port), DiceHandler)
+	print (time.asctime(), "Server Starts - %s:%s" % ("0.0.0.0", port))
 	try:
 		httpd.serve_forever()
 	except KeyboardInterrupt:
 		pass
 	httpd.server_close()
-	print (time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER))
+	print (time.asctime(), "Server Stops - %s:%s" % ("0.0.0.0", port))
 
 if __name__ == "__main__":
 	options = build_parser()
@@ -86,5 +86,6 @@ if __name__ == "__main__":
 		print ('Success Rolls => ' + str(t2))
 	else: 
 		print('running as webserver')
+		run_webservice(options.web)
 		
 	
