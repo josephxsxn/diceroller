@@ -4,6 +4,7 @@
 
 import random
 import optparse
+from urllib.parse import urlparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 
@@ -44,16 +45,23 @@ def roll_multipledicemultipletimes(num, sides, again):
 	return master_rawdice
 	
 def score_dice(dicerolls, above):
-	print (dicerolls)
 	winners = []
 	for dice in dicerolls:
-		print (dice)
 		if dice >= above:
 			winners.append(dice)
 	return winners		
 
+def parse_queryargs(path):
+		options = {}
+		query = (path).split("&")
+		for arg in query:
+			quarg=arg.split("=")
+			if len(quarg) == 2:
+				options[quarg[0]] = int(quarg[1])
+		return options
 
 class DiceHandler(BaseHTTPRequestHandler):
+	
 	def do_HEAD(s):
 		s.send_response(200)
 		s.send_header("Content-type", "text/plain")
@@ -62,7 +70,25 @@ class DiceHandler(BaseHTTPRequestHandler):
 		s.send_response(200)
 		s.send_header("Content-type", "text/plain")
 		s.end_headers()
-		s.wfile.write(bytes("test content", "utf-8"))
+		
+		options = parse_queryargs((urlparse(s.path)[4]))
+		raw_rolls = []
+		winning_rolls = []
+		
+		if len(options) == 4:
+			raw_rolls = roll_multipledicemultipletimes(int(options['num']), options['sides'], options['again'])
+			winning_rolls = score_dice(raw_rolls, options['above'])
+			s.wfile.write(bytes(str(raw_rolls)+"\n", "utf-8"))
+			s.wfile.write(bytes(str(winning_rolls), "utf-8"))
+		elif len(options) == 3:
+			raw_rolls = roll_multipledicemultipletimes(int(options['num']), options['sides'], options['again'])
+			s.wfile.write(bytes(str(raw_rolls)+"\n", "utf-8"))
+		else: 
+			s.wfile.write(bytes("missing arguments please provide num, sides, again, and above","utf-8"))
+
+		
+	
+
 		
 def run_webservice(port):
 	#server_class = BaseHTTPServer.HTTPServer
