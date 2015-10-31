@@ -72,8 +72,6 @@ class DiceHandler(BaseHTTPRequestHandler):
 		s.end_headers()
 		
 		options = parse_queryargs((urlparse(s.path)[4]))
-		raw_rolls = []
-		winning_rolls = []
 		
 		if len(options) == 4:
 			raw_rolls = roll_multipledicemultipletimes(int(options['num']), options['sides'], options['again'])
@@ -84,14 +82,9 @@ class DiceHandler(BaseHTTPRequestHandler):
 			raw_rolls = roll_multipledicemultipletimes(int(options['num']), options['sides'], options['again'])
 			s.wfile.write(bytes(str(raw_rolls)+"\n", "utf-8"))
 		else: 
-			s.wfile.write(bytes("missing arguments please provide num, sides, again, and above","utf-8"))
-
-		
-	
-
+			s.wfile.write(bytes("missing arguments please provide num, sides, again, and optionally above","utf-8"))
 		
 def run_webservice(port):
-	#server_class = BaseHTTPServer.HTTPServer
 	httpd = HTTPServer(("0.0.0.0", port), DiceHandler)
 	print (time.asctime(), "Server Starts - %s:%s" % ("0.0.0.0", port))
 	try:
